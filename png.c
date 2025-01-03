@@ -87,17 +87,20 @@ unsigned char png_header[] = {137, 80, 78, 71, 13, 10, 26, 10};
   png_init_io(png, im);
   png_read_info(png, info);
   
+  *bytes_per_pixel=3;
   int color_type = png_get_color_type(png, info);
-  if(color_type == PNG_COLOR_TYPE_PALETTE)
+  if(color_type == PNG_COLOR_TYPE_PALETTE){
     png_set_palette_to_rgb(png);
-  if(color_type == PNG_COLOR_TYPE_GRAY ||
-     color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+    *bytes_per_pixel=4;
+  }
+
+  if(color_type == PNG_COLOR_TYPE_GRAY ||color_type == PNG_COLOR_TYPE_GRAY_ALPHA){
     png_set_gray_to_rgb(png);
+  }
 
   png_read_update_info(png, info);
 
 
-  *bytes_per_pixel=3;
   if(color_type==PNG_COLOR_TYPE_RGB_ALPHA ){
     *bytes_per_pixel=4;
   }
